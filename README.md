@@ -2,7 +2,7 @@ BlenderImageLUT
 ---
 Real time image-based color grading in Blender's compositor.
 # WARNING
-There is NO correctness guarantee for this implementation and is currently *NOT* color correct. Use at your own risk.
+Only LDR sRGB LUTs are supported. There is NO correctness guarantee for this implementation and is currently *NOT* color correct. Use at your own risk.
 
 # Usage
 ## Loading the Nodes
@@ -19,15 +19,16 @@ There is NO correctness guarantee for this implementation and is currently *NOT*
 ## Loading the LUT image
 - Add an `Image` node with F3 and then load the LUT image of your choice **and setup the `LUT Dimension` ($D$) properly**.
   - **ATTENTION:** Please refer to the [Notes](#notes) section for what kind of LUT image you should be using.
+- Ensure your image transform is linear. Again, **read the [Notes](#notes) section** for more information.
 - Connect the nodes. Your final node setup should look like this:
-<img width="541" alt="image" src="https://github.com/user-attachments/assets/96aa0891-651f-4958-820f-6a308b50b12f" />
+<img width="482" alt="image" src="https://github.com/user-attachments/assets/f39275a0-2aae-47db-a00a-e1f5e81f25af" />
 
 - To view the result, you can enable the compositor under the `Viewport Shading` tab and set the compositor option to `Always` as shown below
-<img width="1272" alt="image" src="https://github.com/user-attachments/assets/9fdb32a7-e8fb-4199-a4a3-d3e09aead871" />
+<img width="830" alt="image" src="https://github.com/user-attachments/assets/64372a9d-807b-4db1-81de-ee169c2ae472" />
 
 # Notes
-## Notes on the LUT image
-Your 3D LUT image should be a **2D Image** of pixel dimension $(D^2,D)$, where $$D$$ is the **uniform size in pixel of your LUT**
+## LUT Dimension
+Your 3D LUT transform should be a **2D Image** of pixel dimension $(D^2,D)$, where $$D$$ is the **uniform size in pixel of your LUT**
 
 The 3D texture should be swizzled onto the 2D plane like this:
 ```
@@ -52,6 +53,10 @@ The $R,G,B$ channels should advance in value in the UV (pixel) direction shown i
 - $B$ channel
 <img width="512" alt="image" src="https://github.com/user-attachments/assets/4aecd6e1-e3e6-44d9-9ceb-98f5de5c2504" />
 
+## Colorspace
+LUTs **contain mapping from Linear (pixel coords) to Linear (colors)**. Therefore before loading, always check the color space of your image - Blender can get these wrong!
+- If unsure, try loading the image with different color spaces and see which one looks correct.
+
 ## Transposing LUTs of different dimensions
 (todo)
 
@@ -63,3 +68,4 @@ Generally there will be 8 texture lookups for each pixel - which is expensive. U
 # References
 - Real Time Rendering 4th Edition
 - https://github.com/mos9527/sssekai_blender_io
+- https://docs.blender.org/manual/en/latest/render/color_management.html
