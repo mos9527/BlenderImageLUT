@@ -53,13 +53,14 @@ The $R,G,B$ channels should advance in value in the UV (pixel) direction shown i
 - $B$ channel
 <img width="512" alt="image" src="https://github.com/user-attachments/assets/4aecd6e1-e3e6-44d9-9ceb-98f5de5c2504" />
 
-## Colorspace
-LUTs **contain mapping from Linear (pixel coords) to Linear (colors)**. Therefore before loading, always check the color space of your image. If it's not linear, convert it to linear. You can check this with a netural LUT and see if the result is correct.
+## Colorspace (with sRGB LUTs)
+LUTs **MUST** **contain mapping from Linear (pixel coords) to Linear (colors)** since Blender's compositor uses linear colorspace at all times
 
-Sometimes the LUT may be authored in sRGB space too, which makes it tricky to identify. In this case, you can:
-- You can use node setup like this to convert the source colorspace to sRGB then do the mapping accordingly.
-<img width="2032" alt="image" src="https://github.com/user-attachments/assets/f6c5ec0a-462b-41b1-9db7-00ad21f0322a" />
-- Image LUTs aren't standardized, so you may need to experiment with different colorspaces to get the correct result.
+[With PNG in sRGB colorspace, the transfer function is simply a power function with gamma 2.2](http://www.libpng.org/pub/png/spec/1.2/png-1.2-pdg.html#C.Anc-color). The following node setup converts the transformed (sRGB->Linear) colors back to sRGB (encoded, linear in UV) colors
+<img width="1387" alt="image" src="https://github.com/user-attachments/assets/557711c8-09c8-456b-85c4-6e9166cb6111" />
+
+Another setup like this also works, which skips color conversions and uses the sample as is
+<img width="1230" alt="image" src="https://github.com/user-attachments/assets/111e8285-f510-4271-93a5-90e96853fadb" />
 
 ## Transposing LUTs of different dimensions
 (todo)
